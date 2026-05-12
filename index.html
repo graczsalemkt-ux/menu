@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webapp Link Buttons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* เพิ่มความเข้มของ Overlay เพื่อให้กรอบเด่นขึ้น */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), 
+                              url('https://lh3.googleusercontent.com/d/1nDVroDZW4Q3P3oKITNXbZ18PUQF-HeBX');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .glass-panel {
+            /* เพิ่มความทึบของสีขาวเป็น 0.18 และเพิ่ม Blur */
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            /* เพิ่มเส้นขอบให้ดูคมชัดขึ้น */
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 40px;
+            /* เพิ่มเงาและรัศมีเรืองแสง (Glow) */
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7),
+                        0 0 20px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary {
+            background-color: white;
+            color: #111827;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: white;
+            transform: scale(1.03);
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-entry {
+            animation: fadeInScale 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-end justify-center p-6 pb-14 md:pb-24">
+
+    <div class="bg-container" id="bgImage"></div>
+
+    <!-- ส่วนเนื้อหาหลักที่ปรับให้เด่นขึ้น -->
+    <div class="glass-panel w-full max-w-md p-10 md:p-12 text-center animate-entry">
+        <div class="mb-8">
+            <h1 class="text-white text-3xl md:text-4xl font-bold mb-3 drop-shadow-lg tracking-wide">สวัสดีครับ</h1>
+            <h2 class="text-white text-xl md:text-2xl font-bold mb-5 leading-tight drop-shadow-md px-2">
+                สนุกกับเกมและกิจกรรมกับเพื่อน<br>พร้อมของรางวัลมากมาย
+            </h2>
+            
+            <div class="h-1.5 w-14 bg-white/50 mx-auto rounded-full mb-8"></div>
+            
+            <div class="text-white text-base md:text-lg font-medium leading-relaxed mb-6 space-y-1">
+                <p class="drop-shadow-sm">1. เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ</p>
+                <p class="drop-shadow-sm">2. ลุ้นจักรยานยนต์ไฟฟ้า เพียงแนบสลิป</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-5">
+            <!-- ปุ่มเล่นเกมส์ -->
+            <button onclick="handleButtonClick('button1')" 
+                    class="btn-primary w-full py-5 px-8 font-bold rounded-2xl text-xl flex items-center justify-center gap-2 shadow-2xl">
+                <span>เล่นเกมส์</span> 
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </button>
+
+            <!-- ปุ่มชิงโชค -->
+            <button onclick="handleButtonClick('button2')" 
+                    class="btn-secondary w-full py-5 px-8 font-semibold rounded-2xl text-lg shadow-xl">
+                ชิงโชคจักรยานยนต์ไฟฟ้า
+            </button>
+        </div>
+
+        <p class="mt-12 text-white/50 text-[11px] tracking-[0.4em] uppercase font-bold">Explore More Experiences</p>
+    </div>
+
+    <script>
+        function handleButtonClick(type) {
+            if (type === 'button1') {
+                window.location.href = 'https://graczsalemkt-ux.github.io/graczreplace/'; 
+            } else if (type === 'button2') {
+                window.location.href = 'https://forms.gle/cmfbE5t7DLBFmQwXA'; 
+            }
+        }
+
+        const bg = document.getElementById('bgImage');
+        const img = new Image();
+        img.src = 'https://lh3.googleusercontent.com/d/1nDVroDZW4Q3P3oKITNXbZ18PUQF-HeBX';
+        img.onerror = function() {
+            bg.style.backgroundImage = 'linear-gradient(45deg, #000, #222)';
+        };
+    </script>
+</body>
+</html>
