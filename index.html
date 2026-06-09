@@ -21,8 +21,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            /* เพิ่มความเข้มของ Overlay เพื่อให้กรอบเด่นขึ้น */
+            z-index: -2; /* ปรับลดลงเพื่อให้แสง Gradient อยู่ด้านบนภาพ */
             background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), 
                               url('https://lh3.googleusercontent.com/d/1nDVroDZW4Q3P3oKITNXbZ18PUQF-HeBX');
             background-size: cover;
@@ -30,15 +29,49 @@
             background-repeat: no-repeat;
         }
 
+        /* --- เอฟเฟกต์แสงเคลื่อนไหวขยับได้ (Moving Gradient) --- */
+        .gradient-ball-1, .gradient-ball-2 {
+            position: absolute;
+            width: 80vmax;
+            height: 80vmax;
+            border-radius: 50%;
+            opacity: 0.18; /* ปรับความเข้มแสงให้สวยกำลังดี */
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .gradient-ball-1 {
+            background: radial-gradient(circle, rgba(52, 211, 153, 1) 0%, rgba(52, 211, 153, 0) 70%); /* โทนสีเขียวใบไม้สดชื่น */
+            top: -20vmax;
+            left: -20vmax;
+            animation: move-1 35s linear infinite alternate;
+        }
+
+        .gradient-ball-2 {
+            background: radial-gradient(circle, rgba(56, 189, 248, 1) 0%, rgba(56, 189, 248, 0) 70%); /* โทนสีฟ้าสะอาดตาสไตล์ Eco */
+            bottom: -30vmax;
+            right: -30vmax;
+            animation: move-2 45s linear infinite alternate;
+        }
+
+        @keyframes move-1 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(30vmax, 15vmax) rotate(180deg); }
+        }
+
+        @keyframes move-2 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-25vmax, -40vmax); }
+        }
+        /* -------------------------------------------------- */
+
         .glass-panel {
-            /* เพิ่มความทึบของสีขาวเป็น 0.18 และเพิ่ม Blur */
             background: rgba(255, 255, 255, 0.18);
             backdrop-filter: blur(35px);
             -webkit-backdrop-filter: blur(35px);
-            /* เพิ่มเส้นขอบให้ดูคมชัดขึ้น */
             border: 1.5px solid rgba(255, 255, 255, 0.3);
             border-radius: 40px;
-            /* เพิ่มเงาและรัศมีเรืองแสง (Glow) */
             box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7),
                         0 0 20px 0 rgba(255, 255, 255, 0.1);
         }
@@ -80,7 +113,11 @@
 
     <div class="bg-container" id="bgImage"></div>
 
-    <!-- ส่วนเนื้อหาหลักที่ปรับให้เด่นขึ้น -->
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden;">
+        <div class="gradient-ball-1"></div>
+        <div class="gradient-ball-2"></div>
+    </div>
+
     <div class="glass-panel w-full max-w-md p-10 md:p-12 text-center animate-entry">
         <div class="mb-8">
             <h1 class="text-white text-3xl md:text-4xl font-bold mb-3 drop-shadow-lg tracking-wide">สวัสดีครับ</h1>
@@ -97,40 +134,39 @@
         </div>
 
         <div class="flex flex-col gap-5">
-            <!-- ปุ่มที่ 1: ชิงโชคจักรยานยนต์ไฟฟ้า -->
-            <button onclick="handleButtonClick('button2')" 
+            <button onclick="handleButtonClick('luckyDraw')" 
                     class="btn-primary w-full py-5 px-8 font-bold rounded-2xl text-lg md:text-xl shadow-2xl transition-all">
                 ชิงโชคจักรยานยนต์ไฟฟ้า
             </button>
 
-            <!-- ปุ่มที่ 2: เล่นเกมส์ -->
-            <button onclick="handleButtonClick('button1')" 
+            <button onclick="handleButtonClick('game')" 
                     class="btn-secondary w-full py-5 px-8 font-semibold rounded-2xl text-xl flex items-center justify-center gap-2 shadow-xl">
-                <span>เล่นเกมส์</span> 
+                <span>เล่นเกม</span> 
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
             </button>
         </div>
 
-        <!-- แก้ไขข้อความด้านล่างเป็น Line ID : @gracz เรียบร้อยแล้ว -->
         <p class="mt-12 text-white/70 text-sm tracking-wider font-semibold">Line ID : @gracz</p>
     </div>
 
     <script>
-        function handleButtonClick(type) {
-            if (type === 'button1') {
+        function handleButtonClick(actionType) {
+            if (actionType === 'game') {
                 window.location.href = 'https://graczsalemkt-ux.github.io/graczreplace/'; 
-            } else if (type === 'button2') {
+            } else if (actionType === 'luckyDraw') {
                 window.location.href = 'https://forms.gle/cmfbE5t7DLBFmQwXA'; 
             }
         }
 
+        // จัดการ Error กรณีโหลดรูปภาพพื้นหลังหลักไม่สำเร็จ
         const bg = document.getElementById('bgImage');
         const img = new Image();
         img.src = 'https://lh3.googleusercontent.com/d/1nDVroDZW4Q3P3oKITNXbZ18PUQF-HeBX';
         img.onerror = function() {
-            bg.style.backgroundImage = 'linear-gradient(45deg, #000, #222)';
+            // หากรูปโหลดไม่ขึ้น จะรันสีพื้นหลังแบบเข้ม และคงเอฟเฟกต์แสงขยับไว้ให้ทำหน้าที่เดิมครับ
+            bg.style.backgroundImage = 'linear-gradient(45deg, #000, #111)';
         };
     </script>
 </body>
