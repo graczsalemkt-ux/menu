@@ -98,22 +98,66 @@
             animation: scooterRideBounce 0.12s infinite alternate ease-in-out;
         }
 
+        /* --- 👜 เอฟเฟกต์กระเป๋าผ้าลอยพลิ้วผ่านหน้าจอ (เพิ่มใหม่) --- */
+        .bag-container {
+            position: fixed;
+            bottom: 42%; /* ลอยอยู่ช่วงกลางค่อนไปทางล่าง */
+            left: -120px;
+            width: 85px; /* ขนาดกระเป๋าที่เหมาะสมไม่บดบังเนื้อหา */
+            height: auto;
+            z-index: 50;
+            pointer-events: none;
+            /* เริ่มลอยหลังจากมอเตอร์ไซค์ออกตัวไปแล้ว 2 วินาที ใช้เวลาวิ่งผ่านจอ 9 วินาที */
+            animation: bagAcrossOnce 9.0s linear 2.0s forwards;
+        }
+
+        .bag-float {
+            animation: itemFloatSway 3.5s infinite alternate ease-in-out;
+        }
+
+        /* --- 🥛 เอฟเฟกต์แก้วน้ำลอยผ่านหน้าจอ (เพิ่มใหม่) --- */
+        .glass-item-container {
+            position: fixed;
+            bottom: 68%; /* ลอยอยู่ช่วงบนเหนือระดับสายตา */
+            left: -120px;
+            width: 70px; /* ขนาดแก้วน้ำที่พอเหมาะ */
+            height: auto;
+            z-index: 50;
+            pointer-events: none;
+            /* เริ่มลอยหลังจากมอเตอร์ไซค์ออกตัวไปแล้ว 4 วินาที ใช้เวลาวิ่งผ่านจอ 10 วินาที */
+            animation: glassAcrossOnce 10.0s linear 4.0s forwards;
+        }
+
+        .glass-item-float {
+            animation: itemFloatSway 4.5s infinite alternate-reverse ease-in-out;
+        }
+
+        /* คีย์เฟรมควบคุมการวิ่งผ่านหน้าจอของแต่ละไอเทม */
         @keyframes driveAcrossOnce {
-            0% {
-                left: -160px;
-            }
-            100% {
-                left: calc(100vw + 160px);
-            }
+            0% { left: -160px; }
+            100% { left: calc(100vw + 160px); }
+        }
+
+        @keyframes bagAcrossOnce {
+            0% { left: -120px; }
+            100% { left: calc(100vw + 120px); }
+        }
+
+        @keyframes glassAcrossOnce {
+            0% { left: -120px; }
+            100% { left: calc(100vw + 120px); }
         }
 
         @keyframes scooterRideBounce {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(-3px);
-            }
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-3px); }
+        }
+
+        /* คีย์เฟรมลอยละลิ่วส่ายเอียงเบาๆ ของกระเป๋าและแก้วน้ำช่วยสร้างมิติ */
+        @keyframes itemFloatSway {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(10deg); }
+            100% { transform: translateY(6px) rotate(-8deg); }
         }
         /* ------------------------------------------------------------------ */
     </style>
@@ -125,8 +169,21 @@
     <!-- 🛵 ตัวมอเตอร์ไซค์สกูตเตอร์ไฟฟ้าวิ่งผ่านหน้าจอตอนโหลดเว็บ -->
     <div class="scooter-container">
         <div class="scooter-bounce">
-            <!-- แสดงรูปภาพมอเตอร์ไซค์ของคุณและกลับทิศทางให้วิ่งไปข้างหน้า -->
             <img src="https://lh3.googleusercontent.com/d/1E2FAfdb8Arvyd3aUgZfCMBpuqj01kaBa" class="w-full h-auto" alt="Motorcycle">
+        </div>
+    </div>
+
+    <!-- 👜 กระเป๋าผ้ารักษ์โลก Gracz ลอยพลิ้วผ่านหน้าจอ (เพิ่มใหม่) -->
+    <div class="bag-container">
+        <div class="bag-float">
+            <img src="https://lh3.googleusercontent.com/d/1B4AM7snH34zx3khfoItKImH7pVdC4-n0" class="w-full h-auto" alt="Eco Bag">
+        </div>
+    </div>
+
+    <!-- 🥛 แก้วน้ำ Gracz ลอยส่ายเบาๆ ผ่านหน้าจอ (เพิ่มใหม่) -->
+    <div class="glass-item-container">
+        <div class="glass-item-float">
+            <img src="https://lh3.googleusercontent.com/d/1ay6NAilTSS-Q9e-b59YJbffdJM40nv3-" class="w-full h-auto" alt="Eco Cup">
         </div>
     </div>
 
@@ -138,12 +195,35 @@
                 สนุกกับเกมและกิจกรรมกับเพื่อน<br>พร้อมของรางวัลมากมาย
             </h2>
             
-            <div class="h-1.5 w-14 bg-white/50 mx-auto rounded-full mb-8"></div>
+            <div class="h-1.5 w-14 bg-white/50 mx-auto rounded-full mb-6"></div>
             
-            <div class="text-white text-base md:text-lg font-medium leading-relaxed mb-6 space-y-1">
-                <p class="drop-shadow-sm">1. เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ</p>
-                <p class="drop-shadow-sm">2. ลุ้นจักรยานยนต์ไฟฟ้า เพียงแนบสลิป</p>
+            <!-- 🌟 ปรับปรุงการออกแบบแถบรายละเอียดกิจกรรมใหม่ให้ดูเป็นแอปพรีเมียม 🌟 -->
+            <div class="space-y-3.5 mb-7 max-w-sm mx-auto">
+                
+                <!-- การ์ดรายละเอียดที่ 1: เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ -->
+                <div class="flex items-center gap-3.5 bg-white/5 border border-white/10 rounded-2xl p-3.5 text-left transition-all duration-300 hover:bg-white/10">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-400/5 flex items-center justify-center border border-emerald-500/20 text-emerald-400 text-xl shadow-inner">
+                        🎮
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-white font-semibold text-sm md:text-base leading-snug drop-shadow-sm">1. เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ</p>
+                        <p class="text-white/60 text-xs mt-0.5 font-light">ร่วมสนุกสะสมแต้มและลุ้นรับไอเทมมากมาย</p>
+                    </div>
+                </div>
+
+                <!-- การ์ดรายละเอียดที่ 2: ลุ้นจักรยานยนต์ไฟฟ้า เพียงแนบสลิป -->
+                <div class="flex items-center gap-3.5 bg-white/5 border border-white/10 rounded-2xl p-3.5 text-left transition-all duration-300 hover:bg-white/10">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-400/5 flex items-center justify-center border border-cyan-500/20 text-cyan-400 text-xl shadow-inner">
+                        🛵
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-white font-semibold text-sm md:text-base leading-snug drop-shadow-sm">2. ลุ้นจักรยานยนต์ไฟฟ้า เพียงแนบสลิป</p>
+                        <p class="text-white/60 text-xs mt-0.5 font-light">ชิงรางวัลใหญ่สกูตเตอร์ไฟฟ้าแห่งอนาคต</p>
+                    </div>
+                </div>
+
             </div>
+            <!-- --------------------------------------------------------------- -->
         </div>
 
         <div class="flex flex-col gap-5">
