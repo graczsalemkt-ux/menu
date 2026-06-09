@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gracz Replace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
@@ -43,15 +43,48 @@
                         0 0 20px 0 rgba(255, 255, 255, 0.1);
         }
 
+        /* ปุ่มหลักพร้อมลูกเล่น Shimmer แสงสะท้อนเรืองแสง */
         .btn-primary {
             background-color: white;
             color: #111827;
+            position: relative;
+            overflow: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .btn-primary:hover {
             transform: scale(1.03);
             box-shadow: 0 15px 30px rgba(255,255,255,0.3);
+        }
+
+        /* ลูกเล่นลำแสงสีขาวนวลวิ่งพาดปุ่มดึงดูดสายตา */
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.5) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-20deg);
+            animation: buttonShineSweep 4.0s infinite ease-in-out;
+        }
+
+        @keyframes buttonShineSweep {
+            0% { left: -150%; }
+            25% { left: 150%; }
+            100% { left: 150%; }
+        }
+
+        /* เพิ่มเอฟเฟกต์ยุบตัวเมื่อสัมผัส (Haptic Feedback) บนมือถือ */
+        .btn-primary:active, .btn-secondary:active {
+            transform: scale(0.97) !important;
+            transition: transform 0.1s ease;
         }
 
         .btn-secondary {
@@ -68,11 +101,11 @@
         }
 
         @keyframes fadeInScale {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .animate-entry {
-            animation: fadeInScale 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         /* --- 🛵 เอฟเฟกต์มอเตอร์ไซค์สกูตเตอร์วิ่งผ่านแบบวนลูปต่อเนื่อง --- */
@@ -84,6 +117,7 @@
             height: auto;
             z-index: 50; /* วิ่งผ่านข้างหน้ากล่องเพื่อความตื่นเต้น */
             pointer-events: none; /* เพื่อไม่ให้ขัดขวางการกดปุ่มบนหน้าจอ */
+            will-change: left; /* ช่วยจัดการประมวลผลบน GPU ลดการหน่วงบนมือถือ */
             /* วนลูปต่อเนื่องเป็นวงจร 20 วินาที (วิ่งออกไปแล้วพักรอก่อนเริ่มรอบใหม่) */
             animation: driveAcrossLoop 20.0s linear infinite;
         }
@@ -107,6 +141,7 @@
             height: auto;
             z-index: 50;
             pointer-events: none;
+            will-change: left;
             /* วนลูปเป็นวงจรร่วมกัน 20 วินาที โดยจะสลับคีย์เฟรมให้ออกมาหลังจากมอเตอร์ไซค์บิดไปแล้ว */
             animation: bagAcrossLoop 20.0s linear infinite;
         }
@@ -124,6 +159,7 @@
             height: auto;
             z-index: 50;
             pointer-events: none;
+            will-change: left;
             /* วนลูปเป็นวงจรร่วมกัน 20 วินาที โดยจะตั้งให้ออกมาหลังกระเป๋าผ่านไป */
             animation: glassAcrossLoop 20.0s linear infinite;
         }
@@ -169,7 +205,8 @@
         /* ------------------------------------------------------------------ */
     </style>
 </head>
-<body class="min-h-screen flex items-end justify-center p-4 xs:p-6 pb-8 sm:pb-14 md:pb-24">
+<!-- ปรับ body เป็น flex items-center และความสูง min-h-[100dvh] ป้องกันอาการขอบล่างโดนตัดบนสมาร์ทโฟน -->
+<body class="min-h-[100dvh] flex items-center justify-center p-4 xs:p-6">
 
     <div class="bg-container" id="bgImage"></div>
 
@@ -195,7 +232,7 @@
     </div>
 
     <!-- ส่วนเนื้อหาหลักที่ปรับให้เด่นขึ้น และใช้ padding ยืดหยุ่นเพื่อกันส่วนล่างตกหน้าจอ -->
-    <div class="glass-panel w-full max-w-md p-6 xs:p-8 sm:p-10 md:p-12 text-center animate-entry">
+    <div class="glass-panel w-full max-w-md p-6 xs:p-8 sm:p-10 md:p-12 text-center animate-entry my-auto">
         <div class="mb-5 sm:mb-8">
             <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 drop-shadow-lg tracking-wide">สวัสดีครับ</h1>
             <h2 class="text-white text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-5 leading-tight drop-shadow-md px-2">
@@ -250,8 +287,8 @@
             </button>
         </div>
 
-        <!-- ปรับระยะห่าง mt-6 บนโมบายล์เพื่อดึงปุ่มและ Line ID ให้กระชับขึ้น สวยงามและไม่ตกหน้าจอ -->
-        <p class="mt-6 sm:mt-12 text-white/70 text-xs sm:text-sm tracking-wider font-semibold">Line ID : @gracz</p>
+        <!-- ข้อความ Line ID : @gracz รักษาระยะห่างที่สวยงามและไม่ล้นจอ -->
+        <p class="mt-6 sm:mt-8 md:mt-12 text-white/70 text-xs sm:text-sm tracking-wider font-semibold">Line ID : @gracz</p>
     </div>
 
     <script>
