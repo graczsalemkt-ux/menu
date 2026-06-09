@@ -98,7 +98,7 @@
             animation: scooterRideBounce 0.12s infinite alternate ease-in-out;
         }
 
-        /* --- 👜 เอฟเฟกต์กระเป๋าผ้าลอยพลิ้วผ่านหน้าจอ (เพิ่มใหม่) --- */
+        /* --- 👜 เอฟเฟกต์กระเป๋าผ้าลอยพลิ้วผ่านหน้าจอ --- */
         .bag-container {
             position: fixed;
             bottom: 42%; /* ลอยอยู่ช่วงกลางค่อนไปทางล่าง */
@@ -115,7 +115,7 @@
             animation: itemFloatSway 3.5s infinite alternate ease-in-out;
         }
 
-        /* --- 🥛 เอฟเฟกต์แก้วน้ำลอยผ่านหน้าจอ (เพิ่มใหม่) --- */
+        /* --- 🥛 เอฟเฟกต์แก้วน้ำลอยผ่านหน้าจอ --- */
         .glass-item-container {
             position: fixed;
             bottom: 68%; /* ลอยอยู่ช่วงบนเหนือระดับสายตา */
@@ -162,7 +162,7 @@
         /* ------------------------------------------------------------------ */
     </style>
 </head>
-<body class="min-h-screen flex items-end justify-center p-6 pb-14 md:pb-24">
+<body class="min-h-screen flex items-end justify-center p-4 xs:p-6 pb-8 sm:pb-14 md:pb-24">
 
     <div class="bg-container" id="bgImage"></div>
 
@@ -173,52 +173,52 @@
         </div>
     </div>
 
-    <!-- 👜 กระเป๋าผ้ารักษ์โลก Gracz ลอยพลิ้วผ่านหน้าจอ (เพิ่มใหม่) -->
+    <!-- 👜 กระเป๋าผ้ารักษ์โลก Gracz ลอยพลิ้วผ่านหน้าจอ -->
     <div class="bag-container">
         <div class="bag-float">
             <img src="https://lh3.googleusercontent.com/d/1B4AM7snH34zx3khfoItKImH7pVdC4-n0" class="w-full h-auto" alt="Eco Bag">
         </div>
     </div>
 
-    <!-- 🥛 แก้วน้ำ Gracz ลอยส่ายเบาๆ ผ่านหน้าจอ (เพิ่มใหม่) -->
+    <!-- 🥛 แก้วน้ำ Gracz ลอยส่ายเบาๆ ผ่านหน้าจอ -->
     <div class="glass-item-container">
         <div class="glass-item-float">
             <img src="https://lh3.googleusercontent.com/d/1ay6NAilTSS-Q9e-b59YJbffdJM40nv3-" class="w-full h-auto" alt="Eco Cup">
         </div>
     </div>
 
-    <!-- ส่วนเนื้อหาหลักที่ปรับให้เด่นขึ้น -->
-    <div class="glass-panel w-full max-w-md p-10 md:p-12 text-center animate-entry">
-        <div class="mb-8">
-            <h1 class="text-white text-3xl md:text-4xl font-bold mb-3 drop-shadow-lg tracking-wide">สวัสดีครับ</h1>
-            <h2 class="text-white text-xl md:text-2xl font-bold mb-5 leading-tight drop-shadow-md px-2">
+    <!-- ส่วนเนื้อหาหลักที่ปรับให้เด่นขึ้น และใช้ padding ยืดหยุ่นเพื่อกันส่วนล่างตกหน้าจอ -->
+    <div class="glass-panel w-full max-w-md p-6 xs:p-8 sm:p-10 md:p-12 text-center animate-entry">
+        <div class="mb-5 sm:mb-8">
+            <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 drop-shadow-lg tracking-wide">สวัสดีครับ</h1>
+            <h2 class="text-white text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-5 leading-tight drop-shadow-md px-2">
                 สนุกกับเกมและกิจกรรมกับเพื่อน<br>พร้อมของรางวัลมากมาย
             </h2>
             
-            <div class="h-1.5 w-14 bg-white/50 mx-auto rounded-full mb-6"></div>
+            <div class="h-1.5 w-14 bg-white/50 mx-auto rounded-full mb-5 sm:mb-6"></div>
             
-            <!-- 🌟 ปรับปรุงการออกแบบแถบรายละเอียดกิจกรรมใหม่ให้ดูเป็นแอปพรีเมียม 🌟 -->
-            <div class="space-y-3.5 mb-7 max-w-sm mx-auto">
+            <!-- 🌟 ปรับปรุงขนาดและระยะห่างการ์ดกิจกรรม เพื่อแก้ไขปัญหาคำล้น และให้ฟิตหน้าจอมือถือ 🌟 -->
+            <div class="space-y-2.5 sm:space-y-3.5 mb-5 sm:mb-7 max-w-sm mx-auto">
                 
                 <!-- การ์ดรายละเอียดที่ 1: เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ -->
-                <div class="flex items-center gap-3.5 bg-white/5 border border-white/10 rounded-2xl p-3.5 text-left transition-all duration-300 hover:bg-white/10">
-                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-400/5 flex items-center justify-center border border-emerald-500/20 text-emerald-400 text-xl shadow-inner">
+                <div class="flex items-center gap-3 sm:gap-3.5 bg-white/5 border border-white/10 rounded-2xl p-2.5 sm:p-3.5 text-left transition-all duration-300 hover:bg-white/10">
+                    <div class="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-400/5 flex items-center justify-center border border-emerald-500/20 text-emerald-400 text-lg sm:text-xl shadow-inner">
                         🎮
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-white font-semibold text-sm md:text-base leading-snug drop-shadow-sm">1. เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ</p>
-                        <p class="text-white/60 text-xs mt-0.5 font-light">ร่วมสนุกสะสมแต้มและลุ้นรับไอเทมมากมาย</p>
+                        <p class="text-white font-semibold text-xs sm:text-sm md:text-base leading-snug drop-shadow-sm">1. เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ</p>
+                        <p class="text-white/60 text-[11px] sm:text-xs mt-0.5 font-light">ร่วมสนุกสะสมแต้มและลุ้นรับไอเทมมากมาย</p>
                     </div>
                 </div>
 
                 <!-- การ์ดรายละเอียดที่ 2: ลุ้นจักรยานยนต์ไฟฟ้า เพียงแนบสลิป -->
-                <div class="flex items-center gap-3.5 bg-white/5 border border-white/10 rounded-2xl p-3.5 text-left transition-all duration-300 hover:bg-white/10">
-                    <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-400/5 flex items-center justify-center border border-cyan-500/20 text-cyan-400 text-xl shadow-inner">
+                <div class="flex items-center gap-3 sm:gap-3.5 bg-white/5 border border-white/10 rounded-2xl p-2.5 sm:p-3.5 text-left transition-all duration-300 hover:bg-white/10">
+                    <div class="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-400/5 flex items-center justify-center border border-cyan-500/20 text-cyan-400 text-lg sm:text-xl shadow-inner">
                         🛵
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-white font-semibold text-sm md:text-base leading-snug drop-shadow-sm">2. ลุ้นจักรยานยนต์ไฟฟ้า เพียงแนบสลิป</p>
-                        <p class="text-white/60 text-xs mt-0.5 font-light">ชิงรางวัลใหญ่สกูตเตอร์ไฟฟ้าแห่งอนาคต</p>
+                        <p class="text-white font-semibold text-xs sm:text-sm md:text-base leading-snug drop-shadow-sm">2. ลุ้นจักรยานยนต์ไฟฟ้า เพียงแนบสลิป</p>
+                        <p class="text-white/60 text-[11px] sm:text-xs mt-0.5 font-light">ชิงรางวัลใหญ่สกูตเตอร์ไฟฟ้าแห่งอนาคต</p>
                     </div>
                 </div>
 
@@ -226,25 +226,25 @@
             <!-- --------------------------------------------------------------- -->
         </div>
 
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-3.5 sm:gap-5">
             <!-- ปุ่มที่ 1: ชิงโชคจักรยานยนต์ไฟฟ้า -->
             <button onclick="handleButtonClick('button2')" 
-                    class="btn-primary w-full py-5 px-8 font-bold rounded-2xl text-lg md:text-xl shadow-2xl transition-all">
+                    class="btn-primary w-full py-4 sm:py-5 px-6 sm:px-8 font-bold rounded-2xl text-base sm:text-lg md:text-xl shadow-2xl transition-all">
                 ชิงโชคจักรยานยนต์ไฟฟ้า
             </button>
 
             <!-- ปุ่มที่ 2: เล่นเกมส์ -->
             <button onclick="handleButtonClick('button1')" 
-                    class="btn-secondary w-full py-5 px-8 font-semibold rounded-2xl text-xl flex items-center justify-center gap-2 shadow-xl">
+                    class="btn-secondary w-full py-4 sm:py-5 px-6 sm:px-8 font-semibold rounded-2xl text-base sm:text-lg md:text-xl flex items-center justify-center gap-2 shadow-xl">
                 <span>เล่นเกมส์</span> 
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
             </button>
         </div>
 
-        <!-- แก้ไขข้อความด้านล่างเป็น Line ID : @gracz เรียบร้อยแล้ว -->
-        <p class="mt-12 text-white/70 text-sm tracking-wider font-semibold">Line ID : @gracz</p>
+        <!-- ปรับระยะห่าง mt-6 บนโมบายล์เพื่อดึงปุ่มและ Line ID ให้กระชับขึ้น สวยงามและไม่ตกหน้าจอ -->
+        <p class="mt-6 sm:mt-12 text-white/70 text-xs sm:text-sm tracking-wider font-semibold">Line ID : @gracz</p>
     </div>
 
     <script>
