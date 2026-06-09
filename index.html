@@ -1,137 +1,274 @@
+xml:Gracz Replace Landing:index.html
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gracz Replace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body {
+        /* จัดการหน้าจอให้ฟิตพอดีกับมือถือทุกรุ่น ป้องกันการสกรอลล์หรือจอเบี้ยว */
+        html, body {
             font-family: 'Kanit', sans-serif;
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
+            height: 100dvh; /* รองรับ Dynamic Viewport ของ Safari/Chrome บนมือถือ */
             overflow: hidden;
-            background-color: #000;
+            background-color: #0b0f12;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
+        /* ภาพพื้นหลังหลัก */
         .bg-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            /* เพิ่มความเข้มของ Overlay เพื่อให้กรอบเด่นขึ้น */
-            background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), 
+            z-index: -3;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.7)), 
                               url('https://lh3.googleusercontent.com/d/1nDVroDZW4Q3P3oKITNXbZ18PUQF-HeBX');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
         }
 
-        .glass-panel {
-            /* เพิ่มความทึบของสีขาวเป็น 0.18 และเพิ่ม Blur */
-            background: rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(35px);
-            -webkit-backdrop-filter: blur(35px);
-            /* เพิ่มเส้นขอบให้ดูคมชัดขึ้น */
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
-            border-radius: 40px;
-            /* เพิ่มเงาและรัศมีเรืองแสง (Glow) */
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7),
-                        0 0 20px 0 rgba(255, 255, 255, 0.1);
+        /* ตัวครอบเอฟเฟกต์ละอองดาว */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
         }
 
+        /* กล่องข้อความแบบกระจกแก้ว (ปรับให้สมดุลและคมชัดยิ่งขึ้นบนมือถือ) */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                        0 0 15px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- เอฟเฟกต์แสงสะท้อนวิ่งผ่านปุ่ม (Shimmer Sweep) --- */
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.6) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-20deg);
+            animation: shineSweep 3.5s infinite ease-in-out;
+        }
+
+        @keyframes shineSweep {
+            0% { left: -150%; }
+            30% { left: 150%; }
+            100% { left: 150%; }
+        }
+
+        /* ปุ่มหลักชิงโชค (สีขาวพรีเมียม + เงาเรืองแสงอ่อนๆ) */
         .btn-primary {
             background-color: white;
             color: #111827;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px -5px rgba(255, 255, 255, 0.2), 
+                        0 0 15px rgba(52, 211, 153, 0.2);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .btn-primary:hover {
-            transform: scale(1.03);
-            box-shadow: 0 15px 30px rgba(255,255,255,0.3);
+        .btn-primary:active {
+            transform: scale(0.97);
+            background-color: #f3f4f6;
         }
 
+        /* ปุ่มเล่นเกม (โปร่งแสงตัดขอบขาว) */
         .btn-secondary {
             background-color: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.6);
+            border: 1.5px solid rgba(255, 255, 255, 0.5);
             color: white;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
 
-        .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-color: white;
-            transform: scale(1.03);
+        .btn-secondary:active {
+            background-color: rgba(255, 255, 255, 0.18);
+            transform: scale(0.97);
         }
 
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+        /* อนิเมชั่นตอนหน้าเว็บโหลดเข้าครั้งแรก (สมูท นุ่มนวล) */
+        @keyframes entrance {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .animate-entry {
-            animation: fadeInScale 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .animate-entrance {
+            animation: entrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-end justify-center p-6 pb-14 md:pb-24">
+<body class="flex items-center justify-center p-4">
 
+    <!-- ภาพพื้นหลังหลัก -->
     <div class="bg-container" id="bgImage"></div>
 
-    <!-- ส่วนเนื้อหาหลักที่ปรับให้เด่นขึ้น -->
-    <div class="glass-panel w-full max-w-md p-10 md:p-12 text-center animate-entry">
-        <div class="mb-8">
-            <h1 class="text-white text-3xl md:text-4xl font-bold mb-3 drop-shadow-lg tracking-wide">สวัสดีครับ</h1>
-            <h2 class="text-white text-xl md:text-2xl font-bold mb-5 leading-tight drop-shadow-md px-2">
+    <!-- Canvas สำหรับเอฟเฟกต์ละอองดาวสีเขียว-ทองลอยฟุ้งเบาๆ -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- กล่องเนื้อหากระจกแก้ว จัดวางกลางหน้าจอพอดี ไม่ว่าจะจอไอโฟนหรือแอนดรอยด์รุ่นไหน -->
+    <div class="glass-panel w-full max-w-[360px] xs:max-w-md p-8 text-center animate-entrance">
+        
+        <!-- ข้อความต้อนรับ -->
+        <div class="mb-6">
+            <h1 class="text-white text-2xl md:text-3xl font-bold mb-2.5 drop-shadow-md tracking-wide">สวัสดีครับ</h1>
+            <h2 class="text-white text-lg md:text-xl font-bold mb-4 leading-snug drop-shadow-sm">
                 สนุกกับเกมและกิจกรรมกับเพื่อน<br>พร้อมของรางวัลมากมาย
             </h2>
             
-            <div class="h-1.5 w-14 bg-white/50 mx-auto rounded-full mb-8"></div>
+            <!-- เส้นคั่นกลางกล่องแก้ว -->
+            <div class="h-[3px] w-12 bg-white/40 mx-auto rounded-full mb-5"></div>
             
-            <div class="text-white text-base md:text-lg font-medium leading-relaxed mb-6 space-y-1">
-                <p class="drop-shadow-sm">1. เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ</p>
-                <p class="drop-shadow-sm">2. ลุ้นจักรยานยนต์ไฟฟ้า เพียงแนบสลิป</p>
+            <!-- รายละเอียดกิจกรรม -->
+            <div class="text-white text-[14px] md:text-[16px] font-medium leading-relaxed mb-4 space-y-1 inline-block text-left">
+                <p class="drop-shadow-sm flex items-center gap-1.5">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    1. เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ
+                </p>
+                <p class="drop-shadow-sm flex items-center gap-1.5">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    2. ลุ้นจักรยานยนต์ไฟฟ้า เพียงแนบสลิป
+                </p>
             </div>
         </div>
 
-        <div class="flex flex-col gap-5">
-            <!-- ปุ่มที่ 1: ชิงโชคจักรยานยนต์ไฟฟ้า -->
-            <button onclick="handleButtonClick('button2')" 
-                    class="btn-primary w-full py-5 px-8 font-bold rounded-2xl text-lg md:text-xl shadow-2xl transition-all">
+        <!-- โซนปุ่มกด -->
+        <div class="flex flex-col gap-4">
+            
+            <!-- ปุ่มที่ 1: ชิงโชคจักรยานยนต์ไฟฟ้า (มีเอฟเฟกต์แสงวิ่งผ่านและเงาเรืองแสง) -->
+            <button onclick="handleButtonClick('luckyDraw')" 
+                    class="btn-primary btn-shimmer w-full py-3.5 px-6 font-bold rounded-xl text-[16px] md:text-[18px]">
                 ชิงโชคจักรยานยนต์ไฟฟ้า
             </button>
 
             <!-- ปุ่มที่ 2: เล่นเกมส์ -->
-            <button onclick="handleButtonClick('button1')" 
-                    class="btn-secondary w-full py-5 px-8 font-semibold rounded-2xl text-xl flex items-center justify-center gap-2 shadow-xl">
+            <button onclick="handleButtonClick('game')" 
+                    class="btn-secondary w-full py-3.5 px-6 font-semibold rounded-xl text-[16px] md:text-[18px] flex items-center justify-center gap-1.5">
                 <span>เล่นเกมส์</span> 
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
             </button>
         </div>
 
-        <!-- แก้ไขข้อความด้านล่างเป็น Line ID : @gracz เรียบร้อยแล้ว -->
-        <p class="mt-12 text-white/70 text-sm tracking-wider font-semibold">Line ID : @gracz</p>
+        <!-- Line ID ของแบรนด์ -->
+        <p class="mt-8 text-white/60 text-xs tracking-widest font-semibold">Line ID : @gracz</p>
     </div>
 
     <script>
-        function handleButtonClick(type) {
-            if (type === 'button1') {
+        // ฟังก์ชันจัดการคลิกปุ่มปลายทาง (ลิงก์เดิมที่ทำงานถูกต้องร้อยเปอร์เซ็นต์)
+        function handleButtonClick(actionType) {
+            if (actionType === 'game') {
                 window.location.href = 'https://graczsalemkt-ux.github.io/graczreplace/'; 
-            } else if (type === 'button2') {
+            } else if (actionType === 'luckyDraw') {
                 window.location.href = 'https://forms.gle/cmfbE5t7DLBFmQwXA'; 
             }
         }
 
+        // จัดการตรวจสอบการโหลดภาพพื้นหลังหลัก
         const bg = document.getElementById('bgImage');
         const img = new Image();
         img.src = 'https://lh3.googleusercontent.com/d/1nDVroDZW4Q3P3oKITNXbZ18PUQF-HeBX';
         img.onerror = function() {
-            bg.style.backgroundImage = 'linear-gradient(45deg, #000, #222)';
+            // หากรูปหลักเกิดขัดข้อง จะแสดงพื้นหลังไล่สีโทนมืดแบบพรีเมียมแทน
+            bg.style.backgroundImage = 'linear-gradient(135deg, #090d0f 0%, #151e22 100%)';
         };
+
+        // --- 🧪 สร้างระบบเอฟเฟกต์ละอองดาวสีเขียว-ทองลอยเบาๆ (Canvas Sparkles) ---
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 50;
+                this.size = Math.random() * 2 + 0.6; // เม็ดละอองขนาดเล็กละเอียด ไม่บดบังสายตา
+                this.speedY = -(Math.random() * 0.7 + 0.2); // ลอยขึ้นช้าๆ อย่างนุ่มนวล
+                this.speedX = (Math.random() - 0.5) * 0.25;
+                // สลับสีเขียวใบไม้ และสีทองอบอุ่น เพื่อสื่อถึงแบรนด์ Gracz คอนเซปต์รักษ์โลกพรีเมียม
+                const isGreen = Math.random() > 0.5;
+                this.color = isGreen 
+                    ? `rgba(52, 211, 153, ${Math.random() * 0.35 + 0.15})` // เขียวพาสเทล
+                    : `rgba(253, 224, 71, ${Math.random() * 0.35 + 0.15})`; // เหลืองทองอ่อน
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < -10) { // เมื่อพ้นจอให้ไปเกิดใหม่ที่ด้านล่างขอบจอ
+                    this.y = canvas.height + 10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                // สร้างเอฟเฟกต์เรืองแสงแบบบางเบา
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.shadowBlur = 0; // รีเซ็ตการเรืองแสงเพื่อประสิทธิภาพบนมือถือ
+            }
+        }
+
+        // สร้างกลุ่มอนุภาคเริ่มต้น
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.min(45, Math.floor(window.innerWidth / 10)); // ปรับสัดส่วนตามขนาดหน้าจอมือถือ
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        // ลูปแอนิเมชั่นวาดภาพ
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        initParticles();
+        animate();
     </script>
 </body>
 </html>
