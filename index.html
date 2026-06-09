@@ -74,11 +74,61 @@
         .animate-entry {
             animation: fadeInScale 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+
+        /* --- 🛵 เอฟเฟกต์มอเตอร์ไซค์สกูตเตอร์วิ่งผ่านเมื่อเปิดเว็บ --- */
+        .scooter-container {
+            position: fixed;
+            bottom: 15%; /* ปรับตำแหน่งความสูงให้สัมพันธ์กับหน้าจอมือถือ */
+            left: -160px; /* เริ่มต้นนอกจอฝั่งซ้าย */
+            width: 140px; /* ขนาดมอเตอร์ไซค์ */
+            height: auto;
+            z-index: 50; /* วิ่งผ่านข้างหน้ากล่องเพื่อความตื่นเต้น */
+            pointer-events: none; /* เพื่อไม่ให้ขัดขวางการกดปุ่มบนหน้าจอ */
+            /* ปรับให้ช้าลงเป็น 8 วินาที และวิ่งผ่านด้วยความเร็วสม่ำเสมอ (linear) เพียงครั้งเดียวแล้วหยุดอยู่นอกจอ */
+            animation: driveAcrossOnce 8.0s linear forwards;
+        }
+
+        /* กลับด้านรูปภาพให้ตัวรถหันหน้าไปทางขวา (วิ่งเดินหน้าตามการเคลื่อนที่) */
+        .scooter-container img {
+            transform: scaleX(-1);
+        }
+
+        /* เอฟเฟกต์เด้งขึ้นลงเบาๆ ของตัวรถขณะขับขี่ให้ดูสมจริง */
+        .scooter-bounce {
+            animation: scooterRideBounce 0.12s infinite alternate ease-in-out;
+        }
+
+        @keyframes driveAcrossOnce {
+            0% {
+                left: -160px;
+            }
+            100% {
+                left: calc(100vw + 160px);
+            }
+        }
+
+        @keyframes scooterRideBounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-3px);
+            }
+        }
+        /* ------------------------------------------------------------------ */
     </style>
 </head>
 <body class="min-h-screen flex items-end justify-center p-6 pb-14 md:pb-24">
 
     <div class="bg-container" id="bgImage"></div>
+
+    <!-- 🛵 ตัวมอเตอร์ไซค์สกูตเตอร์ไฟฟ้าวิ่งผ่านหน้าจอตอนโหลดเว็บ -->
+    <div class="scooter-container">
+        <div class="scooter-bounce">
+            <!-- แสดงรูปภาพมอเตอร์ไซค์ของคุณและกลับทิศทางให้วิ่งไปข้างหน้า -->
+            <img src="https://lh3.googleusercontent.com/d/1E2FAfdb8Arvyd3aUgZfCMBpuqj01kaBa" class="w-full h-auto" alt="Motorcycle">
+        </div>
+    </div>
 
     <!-- ส่วนเนื้อหาหลักที่ปรับให้เด่นขึ้น -->
     <div class="glass-panel w-full max-w-md p-10 md:p-12 text-center animate-entry">
