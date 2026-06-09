@@ -75,7 +75,7 @@
             animation: fadeInScale 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* --- 🛵 เอฟเฟกต์มอเตอร์ไซค์สกูตเตอร์วิ่งผ่านเมื่อเปิดเว็บ --- */
+        /* --- 🛵 เอฟเฟกต์มอเตอร์ไซค์สกูตเตอร์วิ่งผ่านแบบวนลูปต่อเนื่อง --- */
         .scooter-container {
             position: fixed;
             bottom: 15%; /* ปรับตำแหน่งความสูงให้สัมพันธ์กับหน้าจอมือถือ */
@@ -84,8 +84,8 @@
             height: auto;
             z-index: 50; /* วิ่งผ่านข้างหน้ากล่องเพื่อความตื่นเต้น */
             pointer-events: none; /* เพื่อไม่ให้ขัดขวางการกดปุ่มบนหน้าจอ */
-            /* ปรับให้ช้าลงเป็น 8 วินาที และวิ่งผ่านด้วยความเร็วสม่ำเสมอ (linear) เพียงครั้งเดียวแล้วหยุดอยู่นอกจอ */
-            animation: driveAcrossOnce 8.0s linear forwards;
+            /* วนลูปต่อเนื่องเป็นวงจร 20 วินาที (วิ่งออกไปแล้วพักรอก่อนเริ่มรอบใหม่) */
+            animation: driveAcrossLoop 20.0s linear infinite;
         }
 
         /* กลับด้านรูปภาพให้ตัวรถหันหน้าไปทางขวา (วิ่งเดินหน้าตามการเคลื่อนที่) */
@@ -98,7 +98,7 @@
             animation: scooterRideBounce 0.12s infinite alternate ease-in-out;
         }
 
-        /* --- 👜 เอฟเฟกต์กระเป๋าผ้าลอยพลิ้วผ่านหน้าจอ --- */
+        /* --- 👜 เอฟเฟกต์กระเป๋าผ้าลอยพลิ้วผ่านแบบวนลูปต่อเนื่อง --- */
         .bag-container {
             position: fixed;
             bottom: 42%; /* ลอยอยู่ช่วงกลางค่อนไปทางล่าง */
@@ -107,15 +107,15 @@
             height: auto;
             z-index: 50;
             pointer-events: none;
-            /* เริ่มลอยหลังจากมอเตอร์ไซค์ออกตัวไปแล้ว 2 วินาที ใช้เวลาวิ่งผ่านจอ 9 วินาที */
-            animation: bagAcrossOnce 9.0s linear 2.0s forwards;
+            /* วนลูปเป็นวงจรร่วมกัน 20 วินาที โดยจะสลับคีย์เฟรมให้ออกมาหลังจากมอเตอร์ไซค์บิดไปแล้ว */
+            animation: bagAcrossLoop 20.0s linear infinite;
         }
 
         .bag-float {
             animation: itemFloatSway 3.5s infinite alternate ease-in-out;
         }
 
-        /* --- 🥛 เอฟเฟกต์แก้วน้ำลอยผ่านหน้าจอ --- */
+        /* --- 🥛 เอฟเฟกต์แก้วน้ำลอยผ่านแบบวนลูปต่อเนื่อง --- */
         .glass-item-container {
             position: fixed;
             bottom: 68%; /* ลอยอยู่ช่วงบนเหนือระดับสายตา */
@@ -124,28 +124,35 @@
             height: auto;
             z-index: 50;
             pointer-events: none;
-            /* เริ่มลอยหลังจากมอเตอร์ไซค์ออกตัวไปแล้ว 4 วินาที ใช้เวลาวิ่งผ่านจอ 10 วินาที */
-            animation: glassAcrossOnce 10.0s linear 4.0s forwards;
+            /* วนลูปเป็นวงจรร่วมกัน 20 วินาที โดยจะตั้งให้ออกมาหลังกระเป๋าผ่านไป */
+            animation: glassAcrossLoop 20.0s linear infinite;
         }
 
         .glass-item-float {
             animation: itemFloatSway 4.5s infinite alternate-reverse ease-in-out;
         }
 
-        /* คีย์เฟรมควบคุมการวิ่งผ่านหน้าจอของแต่ละไอเทม */
-        @keyframes driveAcrossOnce {
+        /* 🔄 คีย์เฟรมระบบจัดการจังหวะวนลูป (Sync Cycle: 20s) 
+          ทำให้ของรางวัลแต่ละชิ้นมีจังหวะวิ่งผ่านสลับกันอย่างลงตัว ไม่แย่งซีนกัน
+        */
+        @keyframes driveAcrossLoop {
             0% { left: -160px; }
-            100% { left: calc(100vw + 160px); }
+            35% { left: calc(100vw + 160px); } /* วิ่งใช้เวลาประมาณ 7 วินาที */
+            100% { left: calc(100vw + 160px); } /* พักรอนอกจอจนจบรอบ */
         }
 
-        @keyframes bagAcrossOnce {
+        @keyframes bagAcrossLoop {
             0% { left: -120px; }
-            100% { left: calc(100vw + 120px); }
+            20% { left: -120px; } /* รอวินาทีที่ 4 ค่อยเริ่มวิ่ง (20% ของรอบ) */
+            65% { left: calc(100vw + 120px); } /* วิ่งข้ามจอใช้เวลา 9 วินาที */
+            100% { left: calc(100vw + 120px); } /* พักรอนอกจอจนจบรอบ */
         }
 
-        @keyframes glassAcrossOnce {
+        @keyframes glassAcrossLoop {
             0% { left: -120px; }
-            100% { left: calc(100vw + 120px); }
+            40% { left: -120px; } /* รอวินาทีที่ 8 ค่อยเริ่มวิ่ง (40% ของรอบ) */
+            90% { left: calc(100vw + 120px); } /* วิ่งข้ามจอใช้เวลา 10 วินาที */
+            100% { left: calc(100vw + 120px); } /* พักรอนอกจอจนจบรอบ */
         }
 
         @keyframes scooterRideBounce {
@@ -166,21 +173,21 @@
 
     <div class="bg-container" id="bgImage"></div>
 
-    <!-- 🛵 ตัวมอเตอร์ไซค์สกูตเตอร์ไฟฟ้าวิ่งผ่านหน้าจอตอนโหลดเว็บ -->
+    <!-- 🛵 ตัวมอเตอร์ไซค์สกูตเตอร์ไฟฟ้าวิ่งผ่านหน้าจอตอนโหลดเว็บ (และสุ่มวนลูป) -->
     <div class="scooter-container">
         <div class="scooter-bounce">
             <img src="https://lh3.googleusercontent.com/d/1E2FAfdb8Arvyd3aUgZfCMBpuqj01kaBa" class="w-full h-auto" alt="Motorcycle">
         </div>
     </div>
 
-    <!-- 👜 กระเป๋าผ้ารักษ์โลก Gracz ลอยพลิ้วผ่านหน้าจอ -->
+    <!-- 👜 กระเป๋าผ้ารักษ์โลก Gracz ลอยพลิ้วผ่านหน้าจอ (และสุ่มวนลูป) -->
     <div class="bag-container">
         <div class="bag-float">
             <img src="https://lh3.googleusercontent.com/d/1B4AM7snH34zx3khfoItKImH7pVdC4-n0" class="w-full h-auto" alt="Eco Bag">
         </div>
     </div>
 
-    <!-- 🥛 แก้วน้ำ Gracz ลอยส่ายเบาๆ ผ่านหน้าจอ -->
+    <!-- 🥛 แก้วน้ำ Gracz ลอยส่ายเบาๆ ผ่านหน้าจอ (และสุ่มวนลูป) -->
     <div class="glass-item-container">
         <div class="glass-item-float">
             <img src="https://lh3.googleusercontent.com/d/1ay6NAilTSS-Q9e-b59YJbffdJM40nv3-" class="w-full h-auto" alt="Eco Cup">
@@ -197,7 +204,7 @@
             
             <div class="h-1.5 w-14 bg-white/50 mx-auto rounded-full mb-5 sm:mb-6"></div>
             
-            <!-- 🌟 ปรับปรุงขนาดและระยะห่างการ์ดกิจกรรม เพื่อแก้ไขปัญหาคำล้น และให้ฟิตหน้าจอมือถือ 🌟 -->
+            <!-- 🌟 แถบรายละเอียดกิจกรรมรูปแบบการ์ดพรีเมียมฟิตหน้าจอมือถือ 🌟 -->
             <div class="space-y-2.5 sm:space-y-3.5 mb-5 sm:mb-7 max-w-sm mx-auto">
                 
                 <!-- การ์ดรายละเอียดที่ 1: เล่นเกมเพื่อลุ้นของรางวัลอื่นๆ -->
