@@ -178,6 +178,35 @@
             animation: scooterRideBounce 0.12s infinite alternate ease-in-out;
         }
 
+        /* 🌟 มอเตอร์ไซค์พิเศษสำหรับการกดปุ่มชิงโชค (Turbo Boost Mode) 🌟 */
+        .scooter-turbo-container {
+            position: fixed;
+            bottom: 15%;
+            left: -260px;
+            width: 195px; /* ขนาดใหญ่ขึ้นเล็กน้อยเพื่อเพิ่มพลังความยิ่งใหญ่ */
+            height: auto;
+            z-index: 110; /* ทับทุกเลเยอร์ */
+            pointer-events: none;
+            will-change: left;
+            display: none; /* ซ่อนไว้ก่อนกดปุ่ม */
+        }
+
+        .scooter-turbo-container.active {
+            display: block;
+            animation: turboDriveAcross 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .scooter-turbo-container img {
+            transform: scaleX(-1);
+            /* เพิ่ม Motion Blur และ เงาสีเขียวเรืองแสงตอนรถเร่งเทอร์โบ */
+            filter: blur(1.5px) drop-shadow(0 0 20px rgba(52, 211, 153, 0.8));
+        }
+
+        @keyframes turboDriveAcross {
+            0% { left: -260px; }
+            100% { left: calc(100vw + 260px); }
+        }
+
         /* --- 👜 เอฟเฟกต์กระเป๋าผ้าลอยพลิ้วผ่านแบบวนลูปต่อเนื่อง --- */
         .bag-container {
             position: fixed;
@@ -269,6 +298,13 @@
         </div>
     </div>
 
+    <!-- 🌟 🛵 มอเตอร์ไซค์เวอร์ชันเร่งความเร็วเทอร์โบพร้อมเสียงประกายไฟพ่นท่อเมื่อกดชิงโชค 🌟 -->
+    <div class="scooter-turbo-container" id="turbo-scooter">
+        <div class="scooter-bounce">
+            <img src="https://lh3.googleusercontent.com/d/1E2FAfdb8Arvyd3aUgZfCMBpuqj01kaBa" class="w-full h-auto" alt="Turbo Motorcycle">
+        </div>
+    </div>
+
     <!-- 👜 กระเป๋าผ้ารักษ์โลก Gracz ลอยพลิ้วผ่านหน้าจอ (และสุ่มวนลูป) -->
     <div class="bag-container">
         <div class="bag-float">
@@ -348,7 +384,46 @@
             if (type === 'button1') {
                 window.location.href = 'https://graczsalemkt-ux.github.io/graczreplace/'; 
             } else if (type === 'button2') {
-                window.location.href = 'https://forms.gle/cmfbE5t7DLBFmQwXA'; 
+                // 🌟 ทริกเกอร์ระบบมอเตอร์ไซค์เทอร์โบและพ่นประกายไฟเมื่อกดปุ่มชิงโชค 🌟
+                const turboScooter = document.getElementById('turbo-scooter');
+                turboScooter.classList.add('active');
+
+                // บันทึกเวลาเริ่มและคำนวณตำแหน่งพ่นไฟท่อไอเสียแบบเรียลไทม์
+                const start = Date.now();
+                const duration = 1200; // เวลาการวิ่งของรถเทอร์โบ (ตรงกับ CSS Animation: 1.2s)
+
+                function spawnTurboSparks() {
+                    const elapsed = Date.now() - start;
+                    const progress = elapsed / duration;
+
+                    if (progress < 1) {
+                        // คำนวณหาตำแหน่ง X และ Y ของรถชั่วขณะที่กำลังวิ่งผ่าน
+                        const startX = -260;
+                        const endX = window.innerWidth + 260;
+                        const currentX = startX + (endX - startX) * progress;
+                        
+                        // ระดับความสูงของตัวรถ (bottom: 15% เทียบจากด้านล่างของหน้าจอ)
+                        const currentY = window.innerHeight * 0.85;
+
+                        // พ่นกลุ่มละอองไฟประกายระยิบระยับหนาแน่น ยิงออกข้างหลังท่อไอเสียรถ
+                        for (let i = 0; i < 10; i++) {
+                            const p = new Particle(currentX, currentY, false);
+                            p.vx = -Math.random() * 8 - 4; // พ่นไปด้านหลังอย่างรวดเร็ว
+                            p.vy = (Math.random() - 0.5) * 6; // ทิศทางการกระจายบน-ล่าง
+                            p.size = Math.random() * 4 + 1.5; // ขนาดประกายดาวเม็ดใหญ่ขึ้น
+                            particles.push(p);
+                        }
+                        requestAnimationFrame(spawnTurboSparks);
+                    }
+                }
+
+                // เริ่มต้นพ่นประกายไฟท่อไอเสียทันที
+                spawnTurboSparks();
+
+                // หน่วงเวลาการเปลี่ยนหน้าเว็บไป 1.3 วินาที เพื่อให้ผู้ใช้สัมผัสความตื่นเต้นอย่างเต็มตา
+                setTimeout(() => {
+                    window.location.href = 'https://forms.gle/cmfbE5t7DLBFmQwXA'; 
+                }, 1300);
             }
         }
 
