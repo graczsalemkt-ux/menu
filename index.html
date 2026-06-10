@@ -13,6 +13,8 @@
             padding: 0;
             overflow: hidden;
             background-color: #000;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .bg-container {
@@ -21,7 +23,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -3; /* ปรับระดับ z-index ให้อยู่ล่างสุดเพื่อรองรับเลเยอร์แสงเรืองแสง */
             /* เพิ่มความเข้มของ Overlay เพื่อให้กรอบเด่นขึ้น */
             background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.65)), 
                               url('https://lh3.googleusercontent.com/d/1nDVroDZW4Q3P3oKITNXbZ18PUQF-HeBX');
@@ -30,7 +32,34 @@
             background-repeat: no-repeat;
         }
 
+        /* 🌟 เอฟเฟกต์แสงออร่าเรืองแสงตามนิ้วสัมผัสที่ซ่อนอยู่หลังแผงกระจกแก้ว (Interactive Radial Glow) */
+        #interactive-glow {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0.35;
+            filter: blur(100px);
+            border-radius: 50%;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(52, 211, 153, 0.4) 0%, rgba(16, 185, 129, 0) 70%);
+            z-index: -2;
+            will-change: transform;
+        }
+
+        /* 🌟 Canvas แสดงระบบละอองหิ่งห้อยและประกายดาวแตกกระจายเมื่อกดสัมผัส */
+        #sparkle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100; /* นำหน้าสุดเพื่อให้ประกายดาวระเบิดทับกล่องเนื้อหาอย่างสวยงาม */
+        }
+
         .glass-panel {
+            position: relative;
+            z-index: 10;
             /* เพิ่มความทึบของสีขาวเป็น 0.18 และเพิ่ม Blur */
             background: rgba(255, 255, 255, 0.18);
             backdrop-filter: blur(35px);
@@ -227,6 +256,12 @@
 
     <div class="bg-container" id="bgImage"></div>
 
+    <!-- 🌟 เลเยอร์เรืองแสงขยับตามนิ้วสัมผัสที่ซ่อนอยู่เบื้องหลังกล่องแก้ว -->
+    <div id="interactive-glow"></div>
+
+    <!-- 🌟 Canvas แสดงละอองดาวแวดล้อมและประกายดาวแตกเมื่อกดสัมผัส -->
+    <canvas id="sparkle-canvas"></canvas>
+
     <!-- 🛵 ตัวมอเตอร์ไซค์สกูตเตอร์ไฟฟ้าวิ่งผ่านหน้าจอตอนโหลดเว็บ (และสุ่มวนลูป) -->
     <div class="scooter-container">
         <div class="scooter-bounce">
@@ -323,6 +358,156 @@
         img.onerror = function() {
             bg.style.backgroundImage = 'linear-gradient(45deg, #000, #222)';
         };
+
+        // =========================================================================
+        // 🧪 โค้ดระบบเอฟเฟกต์ตอบสนองอัจฉริยะ (Ambient & Touch Interactive Sparks)
+        // =========================================================================
+        
+        // 1. จัดการเลเยอร์แสงเรืองแสงขยับตามนิ้วสัมผัส (Interactive Glow Tracking)
+        const glowEl = document.getElementById('interactive-glow');
+        let glowX = window.innerWidth / 2;
+        let glowY = window.innerHeight / 2;
+        let targetGlowX = window.innerWidth / 2;
+        let targetGlowY = window.innerHeight / 2;
+
+        function updateGlowPosition(clientX, clientY) {
+            targetGlowX = clientX;
+            targetGlowY = clientY;
+        }
+
+        window.addEventListener('pointermove', (e) => {
+            updateGlowPosition(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('pointerdown', (e) => {
+            updateGlowPosition(e.clientX, e.clientY);
+            // สั่งให้ดาวระเบิดกระจายจากจุดกด
+            createSparkleBurst(e.clientX, e.clientY);
+        });
+
+        // 2. จัดการแคนวาสละอองดาว (Sparkle & Ambient Particle System)
+        const canvas = document.getElementById('sparkle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // โครงสร้างวัตถุละอองดาวเดี่ยว
+        class Particle {
+            constructor(x, y, isAmbient = false) {
+                this.x = x;
+                this.y = y;
+                this.isAmbient = isAmbient;
+
+                if (isAmbient) {
+                    // ละอองหิ่งห้อยลอยเบาๆ เป็นพื้นหลัง
+                    this.vx = (Math.random() - 0.5) * 0.4;
+                    this.vy = -Math.random() * 0.5 - 0.2;
+                    this.size = Math.random() * 1.8 + 0.6;
+                    this.alpha = 0;
+                    this.targetAlpha = Math.random() * 0.4 + 0.1;
+                    this.fadeSpeed = 0.008;
+                    // เลือกสีเขียวหรือสีทองเพื่อให้เข้ากับแบรนด์ Gracz
+                    this.color = Math.random() > 0.5 ? '52, 211, 153' : '253, 224, 71';
+                } else {
+                    // ประกายดาวที่แตกตัวจากการสัมผัส (Touch Burst)
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 4.5 + 1.5;
+                    this.vx = Math.cos(angle) * speed;
+                    this.vy = Math.sin(angle) * speed;
+                    this.size = Math.random() * 3 + 1;
+                    this.alpha = 1.0;
+                    this.decay = Math.random() * 0.02 + 0.015;
+                    this.gravity = 0.06; // มีแรงดึงดูดช่วยดึงละอองดาวร่วงหล่นลงมาให้ดูเป็นธรรมชาติ
+                    this.color = Math.random() > 0.6 ? '52, 211, 153' : (Math.random() > 0.5 ? '253, 224, 71' : '255, 255, 255');
+                }
+            }
+
+            update() {
+                if (this.isAmbient) {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.alpha < this.targetAlpha) {
+                        this.alpha += this.fadeSpeed;
+                    }
+                    // หากลอยพ้นขอบบนให้ไปเริ่มต้นใหม่ข้างล่าง
+                    if (this.y < -10) {
+                        this.y = canvas.height + 10;
+                        this.x = Math.random() * canvas.width;
+                        this.alpha = 0;
+                    }
+                } else {
+                    this.x += this.vx;
+                    this.vy += this.gravity;
+                    this.y += this.vy;
+                    this.alpha -= this.decay;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+                ctx.shadowBlur = this.isAmbient ? 8 : 12;
+                ctx.shadowColor = `rgba(${this.color}, 1)`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // เริ่มต้นสร้างละอองหิ่งห้อยลอยเบาๆ ประดับพื้นหลัง
+        function initAmbientParticles() {
+            const ambientCount = Math.min(35, Math.floor(window.innerWidth / 12));
+            for (let i = 0; i < ambientCount; i++) {
+                particles.push(new Particle(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height,
+                    true
+                ));
+            }
+        }
+
+        // ฟังก์ชันสร้างกลุ่มดาวกระจายเมื่อเกิดสัมผัส
+        function createSparkleBurst(x, y) {
+            const burstCount = 14;
+            for (let i = 0; i < burstCount; i++) {
+                particles.push(new Particle(x, y, false));
+            }
+        }
+
+        // แอนิเมชันลูปรันการเคลื่อนไหว (High Performance Render Loop)
+        function drawFrame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // คำนวณเคลื่อนที่แสงเรืองแสงตามนิ้วอย่างราบรื่น (Lerp Physics)
+            glowX += (targetGlowX - glowX) * 0.08;
+            glowY += (targetGlowY - glowY) * 0.08;
+            glowEl.style.transform = `translate(${glowX}px, ${glowY}px) translate(-50%, -50%)`;
+
+            // จัดการวาดและอัปเดตละอองทุกชิ้น
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw();
+
+                // ลบประกายดาวที่จางหายหมดออกเพื่อไม่ให้เปลืองแรม
+                if (!p.isAmbient && p.alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(drawFrame);
+        }
+
+        initAmbientParticles();
+        drawFrame();
     </script>
 </body>
 </html>
