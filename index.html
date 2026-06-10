@@ -158,14 +158,14 @@
         .scooter-container {
             position: fixed;
             bottom: 15%; /* ปรับตำแหน่งความสูงให้สัมพันธ์กับหน้าจอมือถือ */
-            left: -190px; /* เริ่มต้นนอกจอฝั่งซ้าย (ปรับตามความกว้างรถที่ใหญ่ขึ้น) */
+            left: -190px; /* เริ่มต้นนอกจอฝั่งซ้าย */
             width: 170px; /* ขยายขนาดมอเตอร์ไซค์ให้พรีเมียมสมเป็นรางวัลใหญ่ */
             height: auto;
             z-index: 50; /* วิ่งผ่านข้างหน้ากล่องเพื่อความตื่นเต้น */
             pointer-events: none; /* เพื่อไม่ให้ขัดขวางการกดปุ่มบนหน้าจอ */
             will-change: left; /* ช่วยจัดการประมวลผลบน GPU ลดการหน่วงบนมือถือ */
-            /* วนลูปต่อเนื่องเป็นวงจร 20 วินาที */
-            animation: driveAcrossLoop 20.0s linear infinite;
+            /* เร่งความเร็วรวมของลูปขึ้นเป็น 12 วินาที */
+            animation: driveAcrossLoop 12.0s linear infinite;
         }
 
         /* กลับด้านรูปภาพให้ตัวรถหันหน้าไปทางขวา (วิ่งเดินหน้าตามการเคลื่อนที่) */
@@ -193,7 +193,7 @@
 
         .scooter-turbo-container.active {
             display: block;
-            animation: turboDriveAcross 2.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: turboDriveAcross 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .scooter-turbo-container img {
@@ -211,14 +211,14 @@
         .bag-container {
             position: fixed;
             bottom: 42%; /* ลอยอยู่ช่วงกลางค่อนไปทางล่าง */
-            left: -140px; /* เริ่มนอกจอ (ปรับตามความกว้างใหม่) */
+            left: -140px; /* เริ่มนอกจอ */
             width: 110px; /* ขยายขนาดกระเป๋าให้เห็นภาพชัดเจนสวยงาม */
             height: auto;
             z-index: 50;
             pointer-events: none;
             will-change: left;
-            /* วนลูปเป็นวงจรร่วมกัน 20 วินาที */
-            animation: bagAcrossLoop 20.0s linear infinite;
+            /* เร่งความเร็วรวมของลูปขึ้นเป็น 12 วินาที */
+            animation: bagAcrossLoop 12.0s linear infinite;
         }
 
         .bag-float {
@@ -235,35 +235,35 @@
             z-index: 50;
             pointer-events: none;
             will-change: left;
-            /* วนลูปเป็นวงจรร่วมกัน 20 วินาที */
-            animation: glassAcrossLoop 20.0s linear infinite;
+            /* เร่งความเร็วรวมของลูปขึ้นเป็น 12 วินาที */
+            animation: glassAcrossLoop 12.0s linear infinite;
         }
 
         .glass-item-float {
             animation: itemFloatSway 4.5s infinite alternate-reverse ease-in-out;
         }
 
-        /* 🔄 คีย์เฟรมระบบจัดการจังหวะวนลูปและคุมความเร็วใหม่ (Sync Cycle: 20s) 
-          ปรับแต่งให้มอเตอร์ไซค์กระฉับกระเฉงขึ้น (บิดผ่านใน 6 วินาที) และระยะห่างสวยงามยิ่งขึ้น
+        /* 🔄 คีย์เฟรมระบบจัดการจังหวะวนลูปและคุมความเร็วใหม่ทั้งหมด (Sync Cycle: 12.0s) 
+           ปรับปรุงให้เคลื่อนไหวรวดเร็ว ต่อเนื่อง ไร้รอยต่อ
         */
         @keyframes driveAcrossLoop {
             0% { left: -190px; }
-            30% { left: calc(100vw + 190px); } /* วิ่งผ่านหน้าจออย่างฉับไวใน 6 วินาที (30% ของ 20s) */
-            100% { left: calc(100vw + 190px); } /* พักรอนอกจอจนจบรอบ */
+            33.3% { left: calc(100vw + 190px); } /* วิ่งกวาดผ่านหน้าจออย่างรวดเร็วใน 4 วินาที (33.3% ของ 12s) */
+            100% { left: calc(100vw + 190px); } /* พักรอนอกจอจนจบรอบลูป */
         }
 
         @keyframes bagAcrossLoop {
             0% { left: -140px; }
-            25% { left: -140px; } /* หน่วงเวลาเริ่มวิ่งที่วินาทีที่ 5 เพื่อให้หลบมอเตอร์ไซค์พ้น */
-            65% { left: calc(100vw + 140px); } /* ปลิวลมผ่านใน 8 วินาที */
-            100% { left: calc(100vw + 140px); } /* พักรอนอกจอจนจบรอบ */
+            25% { left: -140px; } /* หน่วงเวลาเริ่มวิ่งไว้ 3 วินาที (25% ของ 12s) เพื่อปล่อยช่วงห่างงามๆ */
+            66.7% { left: calc(100vw + 140px); } /* ปลิวลมละลิ่วผ่านอย่างว่องไวใน 5 วินาที (ถึงวินาทีที่ 8) */
+            100% { left: calc(100vw + 140px); } /* พักรอนอกจอจนจบรอบลูป */
         }
 
         @keyframes glassAcrossLoop {
             0% { left: -120px; }
-            45% { left: -120px; } /* หน่วงเวลาเริ่มวิ่งที่วินาทีที่ 9 ให้ลอยมาสวยๆ ปิดท้ายรอบ */
-            85% { left: calc(100vw + 120px); } /* ลอยหมุนช้าๆ ผ่านใน 8 วินาที */
-            100% { left: calc(100vw + 120px); } /* พักรอนอกจอจนจบรอบ */
+            50% { left: -120px; } /* หน่วงเวลาเริ่มวิ่งไว้ 6 วินาที (50% ของ 12s) */
+            91.7% { left: calc(100vw + 120px); } /* ลอยหมุนผ่านไปอย่างกระฉับกระเฉงใน 5 วินาที (ถึงวินาทีที่ 11) */
+            100% { left: calc(100vw + 120px); } /* พักรอนอกจอจนจบรอบลูป */
         }
 
         @keyframes scooterRideBounce {
