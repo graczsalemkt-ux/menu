@@ -100,12 +100,29 @@
             transform: scale(1.03);
         }
 
+        /* ทางเข้าหลัก: มีเอนทรานซ์เข้ามาก่อน จากนั้นเริ่มลูปกระพริบกรอบเรืองแสงสีเขียวแบรนด์รักษ์โลก */
+        .animate-entry {
+            animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+                       borderPulse 3.5s infinite ease-in-out 0.8s;
+        }
+
         @keyframes fadeInScale {
             from { opacity: 0; transform: translateY(20px) scale(0.97); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .animate-entry {
-            animation: fadeInScale 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+        /* 🌟 เอฟเฟกต์กระพริบหายใจเรืองแสงรอบนอกกล่องกระจก (Breathing Glow) 🌟 */
+        @keyframes borderPulse {
+            0%, 100% {
+                border-color: rgba(255, 255, 255, 0.3);
+                box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7),
+                            0 0 20px 0 rgba(255, 255, 255, 0.1);
+            }
+            50% {
+                border-color: rgba(52, 211, 153, 0.8); /* สีเขียวแบรนด์ Gracz */
+                box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7),
+                            0 0 35px 6px rgba(52, 211, 153, 0.45); /* ออร่าเรืองแสงสีเขียวหนานุ่มสวยงาม */
+            }
         }
 
         /* --- 🛵 เอฟเฟกต์มอเตอร์ไซค์สกูตเตอร์วิ่งผ่านแบบวนลูปต่อเนื่อง --- */
